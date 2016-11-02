@@ -1,0 +1,25 @@
+{
+    "name": "crcms/throttle",
+    "description": "crcms throttle limit the number of executions extends laravel",
+    "license": "MIT",
+    "homepage":"https://github.com/crcms/throttle",
+    "authors": [
+        {
+            "name": "simon",
+            "email": "28737164@qq.com",
+            "homepage":"http://crcms.cn"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload":{
+        "files":[
+          "src/helper.php"
+        ],
+        "psr-4": {
+            "Simon\\Throttle\\": "src/"
+        }
+    },
+    "version":"0.0.1"
+}
