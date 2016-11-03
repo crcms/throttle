@@ -3,6 +3,8 @@
 namespace CrCms\Throttle\Contracts;
 
 
+use Illuminate\Http\Request;
+
 interface ThrottleObserverInterface
 {
 
@@ -16,6 +18,6 @@ interface ThrottleObserverInterface
     /**
      * @return string
      */
-    public function key() : string ;
+    public function key(Request $request) : string ;
 
 }

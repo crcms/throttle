@@ -39,7 +39,7 @@ class Throttle implements ThrottleSubjectInterface
      */
     protected function key(ThrottleObserverInterface $observer) : string
     {
-        return $observer->key();
+        return $observer->key($this->request);
     }
 
 
