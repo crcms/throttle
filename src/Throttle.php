@@ -1,65 +1,66 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: simon
- * Date: 2016/9/25
- * Time: 7:15
- */
+namespace CrCms\Throttle;
 
-namespace Simon\Throttle;
-
-
+use CrCms\Throttle\Contracts\ThrottleObserverInterface;
+use CrCms\Throttle\Contracts\ThrottleSubjectInterface;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
-use Simon\Safe\Contracts\ObserverInterface;
-use Simon\Safe\Contracts\SubjectInterface;
-use SplObserver;
 use Illuminate\Contracts\Cache\Repository as Cache;
 
-class Container implements SubjectInterface
+class Throttle implements ThrottleSubjectInterface
 {
 
+    /**
+     * @var Cache|null
+     */
     protected $cache = null;
 
+    /**
+     * @var Request|null
+     */
     protected $request = null;
 
-    protected $ip = '';
 
+    /**
+     * Container constructor.
+     * @param Cache $cache
+     * @param Request $request
+     */
     public function __construct(Cache $cache,Request $request)
     {
         $this->cache = $cache;
         $this->request = $request;
-        $this->ip = $request->ip();
     }
+
 
     /**
      * @param string $className
      * @return string
      */
-    protected function getCacheName(string $className)
+    protected function key(ThrottleObserverInterface $observer) : string
     {
-        return $className.'_'.$this->ip;
+        return $observer->key();
     }
+
 
     /**
      * @param string $className
      */
-    public function attach(string $className)
+    public function attach(ThrottleObserverInterface $observer)
     {
-        // TODO: Implement attach() method.
-        $cacheName = $this->getCacheName($className);
+        $cacheName = $this->key($observer);
 
         if ($this->cache->has($cacheName))
         {
             $cache = $this->cache->get($cacheName);
-            $cache['frequency'] = $cache['frequency']+1;
+            $cache['frequency'] = intval($cache['frequency'])+1;
             $cache['time'] = time();
         }
         else
         {
             $cache = [
                 'frequency'=>1,
-                'ip'=>$this->ip,
+                'ip'=>$this->request->ip(),
                 'time'=>time(),
             ];
         }
@@ -67,13 +68,14 @@ class Container implements SubjectInterface
         $this->cache->forever($cacheName,$cache);
     }
 
+
     /**
      * @param string $className
      */
-    public function detach(string $className)
+    public function detach(ThrottleObserverInterface $observer)
     {
         // TODO: Implement detach() method.
-        $cacheName = $this->getCacheName($className);
+        $cacheName = $this->key($observer);
 
         if ($this->cache->has($cacheName))
         {
@@ -81,14 +83,15 @@ class Container implements SubjectInterface
         }
     }
 
+
     /**
-     * @param ObserverInterface $observer
-     * @return null
+     * @param ThrottleObserverInterface $observer
+     * @return mixed|null
      */
-    public function notify(ObserverInterface $observer)
+    public function notify(ThrottleObserverInterface $observer)
     {
         // TODO: Implement notify() method.
-        $cacheName = $this->getCacheName(get_class($observer));
+        $cacheName = $this->key($observer);
 
         if ($this->cache->has($cacheName))
         {

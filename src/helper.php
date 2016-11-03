@@ -1,35 +1,53 @@
 <?php
+use CrCms\Throttle\Contracts\ThrottleObserverInterface;
+
+
 if (!function_exists('throttle'))
 {
+    /**
+     * @return \Illuminate\Foundation\Application|mixed
+     */
     function throttle()
     {
         return app('throttle');
     }
 }
 
-if (!function_exists('safe_attach'))
-{
 
-    function safe_attach(string $className)
+if (!function_exists('throttle_attach'))
+{
+    /**
+     * @param ThrottleObserverInterface $observer
+     * @return mixed
+     */
+    function throttle_attach(ThrottleObserverInterface $observer)
     {
-        return app('safe')->attach($className);
+        return app('throttle')->attach($observer);
     }
 }
 
-if (!function_exists('safe_detach'))
-{
 
-    function safe_detach(string $className)
+if (!function_exists('throttle_detach'))
+{
+    /**
+     * @param ThrottleObserverInterface $observer
+     * @return mixed
+     */
+    function throttle_detach(ThrottleObserverInterface $observer)
     {
-        return app('safe')->detach($className);
+        return app('throttle')->detach($observer);
     }
 }
 
-if (!function_exists('safe_notify'))
-{
 
-    function safe_notify(\Simon\Safe\Contracts\ObserverInterface $observer)
+if (!function_exists('throttle_notify'))
+{
+    /**
+     * @param ThrottleObserverInterface $observer
+     * @return mixed
+     */
+    function throttle_notify(ThrottleObserverInterface $observer)
     {
-        return app('safe')->notify($observer);
+        return app('throttle')->notify($observer);
     }
 }

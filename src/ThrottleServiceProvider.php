@@ -1,8 +1,9 @@
 <?php
 namespace Simon\Throttle;
 
+use CrCms\Throttle\Contracts\ThrottleSubjectInterface;
+use CrCms\Throttle\Throttle;
 use Illuminate\Support\ServiceProvider;
-use Simon\Safe\Contracts\SafeSubjectInterface;
 
 class ThrottleServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,7 @@ class ThrottleServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            $this->configPath => config_path('safe.php'),
+            $this->configPath => config_path('throttle.php'),
         ]);
     }
 
@@ -38,7 +39,7 @@ class ThrottleServiceProvider extends ServiceProvider
         //合并 config
         $this->mergeConfigFrom($this->configPath, 'throttle');
 
-        $this->app->singleton([SafeSubjectInterface::class=>'throttle'],Container::class);
+        $this->app->singleton([ThrottleSubjectInterface::class=>'throttle'],Throttle::class);
     }
 
 

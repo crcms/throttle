@@ -18,8 +18,7 @@
           "src/helper.php"
         ],
         "psr-4": {
-            "Simon\\Throttle\\": "src/"
+            "CrCms\\Throttle\\": "src/"
         }
-    },
-    "version":"0.0.1"
+    }
 }
