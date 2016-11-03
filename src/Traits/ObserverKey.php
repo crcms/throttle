@@ -9,15 +9,17 @@
 namespace CrCms\Throttle\Traits;
 
 
+use Illuminate\Http\Request;
+
 trait ObserverKey
 {
 
     /**
      * @return string
      */
-    public function key() : string
+    public function key(Request $request) : string
     {
-        return get_class($this);
+        return get_class($this).$request->ip();
     }
 
 }
